@@ -1,8 +1,9 @@
-import Request from '../lib/index'
-import { RequestConfig } from '../lib/index'
+import Request from '../build/request.es'
+import type { RequestConfig } from '../build/types/index'
 
 const request = new Request({
   baseURL: "https://cnodejs.org/",
+  successMap: ['code', 0],
   interceptors: {
     // 实例请求拦截
     requestInterceptors: (config) => {
