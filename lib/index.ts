@@ -9,13 +9,16 @@ import axios from "axios";
 import type { AxiosInstance, AxiosResponse, AxiosRequestConfig } from "axios";
 
 export interface ResponseConfig extends AxiosResponse {
-  is2Catch?: boolean /* 用于拦截ResponseConfig触发catch时使用 */;
+  is2Catch?: boolean /* 用于手动拦截ResponseConfig触发catch时使用 */;
 }
-export interface RequestInterceptors {
-  requestInterceptors?: (config: AxiosRequestConfig) => AxiosRequestConfig;
+export interface RequestInterceptors<
+  Req = AxiosRequestConfig,
+  Res = ResponseConfig
+> {
+  requestInterceptors?: (config: Req) => Req;
   requestInterceptorsCatch?: (err: any) => any;
 
-  responseInterceptors?: (config: ResponseConfig) => ResponseConfig;
+  responseInterceptors?: (config: Res) => Res;
   responseInterceptorsCatch?: (err: any) => any;
 }
 export type SuccessMaps = [string, string | number | boolean] | [];
@@ -36,7 +39,7 @@ const isBoolean = (val: unknown) =>
 class Request {
   instance: AxiosInstance;
 
-  interceptorsObj?: RequestInterceptors;
+  interceptorsObj?: RequestInterceptors<RequestConfig, ResponseConfig>;
 
   cancelRequestSourceList: CancelRequestSource[];
 

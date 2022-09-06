@@ -21,3 +21,5 @@ export function getPost() {
     },
   });
 }
+
+getPost().then(res=>{console.log('resolve',res)}).catch(res=>console.warn('reject',res))

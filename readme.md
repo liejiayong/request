@@ -33,6 +33,7 @@ import Request from '@liejy/request'
 
 const request = new Request({
   baseURL: "https://cnodejs.org/",
+  successMap: ["code", 0],
   interceptors: {
     // 实例请求拦截
     requestInterceptors: (config) => {
