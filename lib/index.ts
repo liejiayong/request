@@ -8,20 +8,25 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosResponse, AxiosRequestConfig } from "axios";
 
-export interface RequestInterceptors {
-  requestInterceptors?: (config: AxiosRequestConfig) => AxiosRequestConfig;
+export interface ResponseConfig extends AxiosResponse {
+  is2Catch?: boolean /* 用于手动拦截ResponseConfig触发catch时使用 */;
+}
+export interface RequestInterceptors<
+  Req = AxiosRequestConfig,
+  Res = ResponseConfig
+> {
+  requestInterceptors?: (config: Req) => Req;
   requestInterceptorsCatch?: (err: any) => any;
 
-  responseInterceptors?: (config: AxiosResponse) => AxiosResponse;
+  responseInterceptors?: (config: Res) => Res;
   responseInterceptorsCatch?: (err: any) => any;
 }
+export type SuccessMaps = [string, string | number | boolean] | [];
+
 export interface RequestConfig extends AxiosRequestConfig {
   interceptors?: RequestInterceptors;
-  successCodeList?: number[];
+  successMap?: SuccessMaps;
   canRepeat?: boolean;
-}
-export interface ResponseConfig extends AxiosResponse {
-  is2Catch?: boolean /* 用于拦截ResponseConfig触发catch时使用 */;
 }
 
 export interface CancelRequestSource {
@@ -34,19 +39,19 @@ const isBoolean = (val: unknown) =>
 class Request {
   instance: AxiosInstance;
 
-  interceptorsObj?: RequestInterceptors;
+  interceptorsObj?: RequestInterceptors<RequestConfig, ResponseConfig>;
 
-  cancelRequestSourceList?: CancelRequestSource[];
+  cancelRequestSourceList: CancelRequestSource[];
 
-  requestUrlList?: string[];
+  requestUrlList: string[];
 
-  successCodeList?: number[];
+  successMap: SuccessMaps;
 
   constructor(config: RequestConfig) {
     this.instance = axios.create(config);
     this.interceptorsObj = config.interceptors;
     this.requestUrlList = [];
-    this.successCodeList = config.successCodeList || [200];
+    this.successMap = config.successMap || [];
     this.cancelRequestSourceList = [];
     this.instance.interceptors.request.use(
       (res: RequestConfig) => res,
@@ -87,9 +92,17 @@ class Request {
           if (config.interceptors?.responseInterceptors) {
             res = config.interceptors.responseInterceptors(res);
           }
-          res.status !== 200 || res.is2Catch
-            ? reject(res.data)
-            : resolve(res.data);
+          if (res.status === 200) {
+            if (this.successMap.length === 0) {
+              resolve(res.data);
+            } else if (res.data[this.successMap[0]] === this.successMap[1]) {
+              resolve(res.data);
+            } else {
+              reject(res.data);
+            }
+          } else {
+            reject(res.data);
+          }
         })
         .catch((err: any) => {
           reject(err);

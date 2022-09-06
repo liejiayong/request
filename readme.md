@@ -26,13 +26,14 @@ npm install @liejy/request
 
 #### Request(config)
 
-配置`Request`构造函数，配置项`config`与 `Axios` 保持一致。
+配置`Request`构造函数，配置项`config`与 `Axios` 基本保持一致。
 
 ```ts
 import Request from '@liejy/request'
 
 const request = new Request({
   baseURL: "https://cnodejs.org/",
+  successMap: ["code", 0],
   interceptors: {
     // 实例请求拦截
     requestInterceptors: (config) => {
@@ -45,6 +46,17 @@ const request = new Request({
   },
 });
 
+```
+
+其中`config`配置新增几项配置
+
+```ts
+export type SuccessMaps = [string, string | number | boolean] | [];
+export interface RequestConfig extends AxiosRequestConfig {
+  interceptors?: RequestInterceptors;
+  successMap?: SuccessMaps; /* 是否开启响应态处理，返回成功永远resolve，返回错误永远reject。格式如： ['code', 0] */
+  canRepeat?: boolean; /* 是否同时发送相同请求 */
+}
 ```
 
 #### request#request(config)

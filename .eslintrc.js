@@ -37,7 +37,7 @@ module.exports = {
     'no-plusplus': 0,
     'guard-for-in': 0,
     'func-names': 0,
-    "no-unused-expressions": ["error", { "allowShortCircuit": true,"allowTernary": true }]
+    "no-unused-expressions": ["error", { "allowShortCircuit": true,"allowTernary": false }]
   },
   settings: {
     'import/extensions': 'off',
