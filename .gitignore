@@ -1,7 +1,6 @@
 .idea/*
 .vscode
 .nyc_output
-build
 /dist
 node_modules
 test
