@@ -42,7 +42,7 @@ const doRelease = async (version) => {
   step("\nBuild package...");
   await build();
   step("\nBump version...");
-  // await ifDryRun(`npm`, ['version', version, '-m', `chore(version): bump version to v${version}`]);
+  await ifDryRun(`npm`, ['version', version, '-m', `chore(version): bump version to v${version}`]);
 
   step("\nGenerate changelog...");
   await ifDryRun("npm", ["run", "genlog"]);
