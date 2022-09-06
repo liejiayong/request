@@ -3,10 +3,10 @@ import { AxiosResponse, AxiosRequestConfig, AxiosInstance } from 'axios';
 interface ResponseConfig extends AxiosResponse {
     is2Catch?: boolean;
 }
-interface RequestInterceptors {
-    requestInterceptors?: (config: AxiosRequestConfig) => AxiosRequestConfig;
+interface RequestInterceptors<Req = AxiosRequestConfig, Res = ResponseConfig> {
+    requestInterceptors?: (config: Req) => Req;
     requestInterceptorsCatch?: (err: any) => any;
-    responseInterceptors?: (config: ResponseConfig) => ResponseConfig;
+    responseInterceptors?: (config: Res) => Res;
     responseInterceptorsCatch?: (err: any) => any;
 }
 declare type SuccessMaps = [string, string | number | boolean] | [];
@@ -20,7 +20,7 @@ interface CancelRequestSource {
 }
 declare class Request {
     instance: AxiosInstance;
-    interceptorsObj?: RequestInterceptors;
+    interceptorsObj?: RequestInterceptors<RequestConfig, ResponseConfig>;
     cancelRequestSourceList: CancelRequestSource[];
     requestUrlList: string[];
     successMap: SuccessMaps;
