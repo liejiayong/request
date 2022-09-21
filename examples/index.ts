@@ -3,7 +3,7 @@ import type { RequestConfig } from '../build/types/index'
 
 const request = new Request({
   baseURL: "https://cnodejs.org/",
-  successMap: ['success', true],
+  successMap: {'success': true},
   interceptors: {
     // 实例请求拦截
     requestInterceptors: (config) => {
