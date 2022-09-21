@@ -1,9 +1,9 @@
-import Request from '../build/request.es'
-import type { RequestConfig } from '../build/types/index'
+import Request from "../build/request.es";
+import type { RequestConfig } from "../build/types/index";
 
 const request = new Request({
   baseURL: "https://cnodejs.org/",
-  successMap: ['success', true],
+  successMap: { success: true },
   interceptors: {
     // 实例请求拦截
     requestInterceptors: (config) => {
@@ -19,7 +19,7 @@ const request = new Request({
 interface iRequestConfig<T> extends RequestConfig {
   data?: T;
 }
-interface iResponse<T=any> {
+interface iResponse<T = any> {
   code: number;
   message: string;
   data: T;
@@ -37,4 +37,4 @@ export const cancelRequest = (url: string | string[]) => {
 export const cancelAllRequest = () => {
   return request.cancelAllRequest();
 };
-export default http
+export default http;
