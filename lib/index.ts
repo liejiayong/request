@@ -21,7 +21,9 @@ export interface RequestInterceptors<
   responseInterceptors?: (config: Res) => Res;
   responseInterceptorsCatch?: (err: any) => any;
 }
-export type SuccessMaps = Record<string, string | number | boolean>;
+
+type codeType = string | number | boolean;
+export type SuccessMaps = Record<string, codeType | codeType[]>;
 
 export interface RequestConfig extends AxiosRequestConfig {
   interceptors?: RequestInterceptors;
@@ -36,10 +38,18 @@ export interface CancelRequestSource {
 const isBoolean = (val: unknown) =>
   Object.prototype.toString.call(val) === "[object Boolean]";
 
+const isArray = (val: unknown) =>
+  Object.prototype.toString.call(val) === "[object Array]";
+
 function getSuccessFlag(raw: SuccessMaps = {}, ref: SuccessMaps = {}) {
   let flag = false;
   for (const key in ref) {
-    if (raw[key] === ref[key]) {
+    const v1 = raw[key];
+    const v2 = ref[key];
+    const state = isArray(v2)
+      ? (v2 as codeType[]).some((item) => v1 === item)
+      : v1 === v2;
+    if (state) {
       flag = true;
     }
   }

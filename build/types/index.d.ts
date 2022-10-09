@@ -8,7 +8,8 @@ export interface RequestInterceptors<Req = AxiosRequestConfig, Res = ResponseCon
     responseInterceptors?: (config: Res) => Res;
     responseInterceptorsCatch?: (err: any) => any;
 }
-export declare type SuccessMaps = [string, string | number | boolean] | [];
+declare type codeType = string | number | boolean;
+export declare type SuccessMaps = Record<string, codeType | codeType[]>;
 export interface RequestConfig extends AxiosRequestConfig {
     interceptors?: RequestInterceptors;
     successMap?: SuccessMaps;

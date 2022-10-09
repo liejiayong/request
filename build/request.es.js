@@ -10,13 +10,33 @@ import axios from 'axios';
 var isBoolean = function (val) {
     return Object.prototype.toString.call(val) === "[object Boolean]";
 };
+var isArray = function (val) {
+    return Object.prototype.toString.call(val) === "[object Array]";
+};
+function getSuccessFlag(raw, ref) {
+    if (raw === void 0) { raw = {}; }
+    if (ref === void 0) { ref = {}; }
+    var flag = false;
+    var _loop_1 = function (key) {
+        var v1 = raw[key];
+        var v2 = ref[key];
+        var state = isArray(v2) ? v2.some(function (item) { return v1 === item; }) : v1 === v2;
+        if (state) {
+            flag = true;
+        }
+    };
+    for (var key in ref) {
+        _loop_1(key);
+    }
+    return flag;
+}
 var Request = /** @class */ (function () {
     function Request(config) {
         var _a, _b, _c, _d;
         this.instance = axios.create(config);
         this.interceptorsObj = config.interceptors;
         this.requestUrlList = [];
-        this.successMap = config.successMap || [];
+        this.successMap = config.successMap || {};
         this.cancelRequestSourceList = [];
         this.instance.interceptors.request.use(function (res) { return res; }, function (err) { return err; });
         this.instance.interceptors.request.use((_a = this.interceptorsObj) === null || _a === void 0 ? void 0 : _a.requestInterceptors, (_b = this.interceptorsObj) === null || _b === void 0 ? void 0 : _b.requestInterceptorsCatch);
@@ -50,14 +70,16 @@ var Request = /** @class */ (function () {
                     res = config.interceptors.responseInterceptors(res);
                 }
                 if (res.status === 200) {
-                    if (_this.successMap.length === 0) {
-                        resolve(res.data);
-                    }
-                    else if (res.data[_this.successMap[0]] === _this.successMap[1]) {
-                        resolve(res.data);
+                    if (JSON.stringify(_this.successMap) !== "{}") {
+                        if (getSuccessFlag(res.data, _this.successMap)) {
+                            resolve(res.data);
+                        }
+                        else {
+                            reject(res.data);
+                        }
                     }
                     else {
-                        reject(res.data);
+                        resolve(res.data);
                     }
                 }
                 else {
@@ -110,3 +132,4 @@ var Request = /** @class */ (function () {
 }());
 
 export { Request as default };
+//# sourceMappingURL=request.es.js.map

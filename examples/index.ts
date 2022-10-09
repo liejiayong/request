@@ -3,7 +3,7 @@ import type { RequestConfig } from "../build/types/index";
 
 const request = new Request({
   baseURL: "https://cnodejs.org/",
-  successMap: { success: true },
+  successMap: { success: [true,1] },
   interceptors: {
     // 实例请求拦截
     requestInterceptors: (config) => {
@@ -16,10 +16,10 @@ const request = new Request({
   },
 });
 
-interface iRequestConfig<T> extends RequestConfig {
+export interface iRequestConfig<T> extends RequestConfig {
   data?: T;
 }
-interface iResponse<T = any> {
+export interface iResponse<T = any> {
   code: number;
   message: string;
   data: T;

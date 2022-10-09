@@ -1,11 +1,13 @@
 import http, { cancelAllRequest, cancelRequest  } from "./index";
 
-export function getPost() {
- return http({
+export class Post {
+  static getPost() {
+     return http({
     method: "get",
     url: "/api/v1/topics",
     canRepeat: false,
-    params: { id: 1 },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    data: { limit: 1 },
     interceptors: {
       // 请求拦截器
       requestInterceptors: (config) => {
@@ -20,6 +22,7 @@ export function getPost() {
       },
     },
   });
+  }
 }
 
-getPost().then(res=>{console.log('resolve',res)}).catch(res=>console.warn('reject',res))
+Post.getPost().then(res=>{console.log('resolve',res)}).catch(res=>console.warn('reject',res))

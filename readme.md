@@ -30,7 +30,7 @@ npm install @liejy/request
 
 配置`Request`构造函数，配置项`config`与 `Axios` 基本保持一致。
 
-> 注：v0.0.2 与 v0.0.3 的区别在于 successMap 传递的参数不一致。在 v0.0.2 版本中使用元组，如：['code', 0]来拦截相应状态；在 v0.0.3 版本中由于遇到多种成功状态拦截的场景，因此改用为对象形式，如：{code:0,ret:0}以作扩展。
+> 注：v0.0.2 与 v0.0.3 的区别在于 successMap 传递的参数不一致。在 v0.0.2 版本中使用元组，如：['code', 0]来拦截相应状态；在 v0.0.3 版本中由于遇到多种成功状态拦截的场景，因此改用为对象形式，如：{code:0,ret:[0, false]}以作扩展。
 
 ```ts
 import Request from "@liejy/request";
@@ -54,10 +54,11 @@ const request = new Request({
 其中`config`配置新增几项配置
 
 ```ts
-export type SuccessMaps = Record<string, string | number | boolean>;
+type codeType =  string | number | boolean
+export type SuccessMaps = Record<string, codeType| codeType[]>;
 export interface RequestConfig extends AxiosRequestConfig {
   interceptors?: RequestInterceptors;
-  successMap?: SuccessMaps /* 是否开启响应态处理，返回成功永远resolve，返回错误永远reject。格式如： ['code', 0] */;
+  successMap?: SuccessMaps /* 默认为不开启成功拦截，不设置则不开启。开启响应态处理，返回成功永远resolve，返回错误永远reject。格式如： {code:0,ret:[0, false]} */;
   canRepeat?: boolean /* 是否同时发送相同请求 */;
 }
 ```

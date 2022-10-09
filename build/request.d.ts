@@ -9,7 +9,8 @@ interface RequestInterceptors<Req = AxiosRequestConfig, Res = ResponseConfig> {
     responseInterceptors?: (config: Res) => Res;
     responseInterceptorsCatch?: (err: any) => any;
 }
-declare type SuccessMaps = [string, string | number | boolean] | [];
+declare type codeType = string | number | boolean;
+declare type SuccessMaps = Record<string, codeType | codeType[]>;
 interface RequestConfig extends AxiosRequestConfig {
     interceptors?: RequestInterceptors;
     successMap?: SuccessMaps;
