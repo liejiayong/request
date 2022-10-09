@@ -25,7 +25,9 @@ var MyLib = (function (axios) {
       var _loop_1 = function (key) {
           var v1 = raw[key];
           var v2 = ref[key];
-          var state = isArray(v2) ? v2.some(function (item) { return v1 === item; }) : v1 === v2;
+          var state = isArray(v2)
+              ? v2.some(function (item) { return v1 === item; })
+              : v1 === v2;
           if (state) {
               flag = true;
           }
@@ -139,4 +141,3 @@ var MyLib = (function (axios) {
   return Request;
 
 })(axios);
-//# sourceMappingURL=request.global.js.map
